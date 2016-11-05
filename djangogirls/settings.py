@@ -149,7 +149,8 @@ THUMBNAIL_PRESERVE_EXTENSIONS = True
 THUMBNAIL_ALIASES = {
     '': {
         'coach': {'size': (160, 160), 'crop': "smart"},
-        'sponsor': {'size': (204, 204), 'crop': False}
+        'sponsor': {'size': (204, 204), 'crop': False},
+        'credit_receiver': {'size': (160, 160), 'crop': "smart"},
     },
 }
 
