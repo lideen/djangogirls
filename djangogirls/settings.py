@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'gulp_rev',
     'django_dynamic_fixture',
+    'django_gravatar',
 
     'core',
     'applications',

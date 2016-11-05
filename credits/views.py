@@ -1,11 +1,11 @@
 from django.views.generic.list import ListView
 
-from credits.models import CreditReceiver
+from credits.models import Contributor
 
 
-class CreditReceiversView(ListView):
+class ContributorListView(ListView):
     template_name = 'credits/credit_receivers_list.html'
-    context_object_name = 'credits'
+    context_object_name = 'contributors'
 
     def get_queryset(self):
-        return CreditReceiver.objects.all().order_by('?')
+        return Contributor.objects.all().order_by('?')

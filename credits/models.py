@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django_gravatar.helpers import get_gravatar_url, has_gravatar
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 
@@ -8,7 +9,7 @@ from credits.constants import DEFAULT_CREDIT_RECEIVER_PHOTO, CREDIT_CATEGORY_CHO
 
 
 @python_2_unicode_compatible
-class CreditReceiver(models.Model):
+class Contributor(models.Model):
     name = models.CharField(max_length=256, null=False, blank=False)
     photo = models.ImageField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
@@ -21,10 +22,14 @@ class CreditReceiver(models.Model):
 
     class Meta:
         ordering = ("name",)
-        verbose_name_plural = "CreditReceivers"
+        verbose_name_plural = "Contributors"
 
     @property
     def photo_url(self):
+        # Default to using gravatar if the contributer has a gravatar
+        if self.email and has_gravatar(self.email):
+            return get_gravatar_url(self.email, size=160)
+        # Otherwise use the uploaded photo if possible
         if self.photo:
             try:
                 return get_thumbnailer(self.photo)['credit_receiver'].url
@@ -35,7 +40,7 @@ class CreditReceiver(models.Model):
 
 @python_2_unicode_compatible
 class Credit(models.Model):
-    receiver = models.ForeignKey(CreditReceiver, null=False, blank=False, related_name='credits')
+    receiver = models.ForeignKey(Contributor, null=False, blank=False, related_name='credits')
     credit = models.CharField(max_length=512, null=False, blank=False)
     category = models.CharField(max_length=512, null=False, blank=True, choices=CREDIT_CATEGORY_CHOICES)
 
