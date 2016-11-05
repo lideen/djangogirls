@@ -18,9 +18,3 @@ def get_json_response_or_none(path):
 
 def get_contributors(repo='tutorial', owner='djangogirls'):
     return gh.get_repo('{owner}/{repo}'.format(owner=owner, repo=repo)).get_contributors()
-
-
-def get_user(username):
-    return get_json_response_or_none('/users/{username}'.format(
-        username=username
-    ))
