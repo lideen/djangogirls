@@ -40,10 +40,12 @@ INSTALLED_APPS = (
     'bootstrap3_datetime',
     'ckeditor',
     'gulp_rev',
+    'django_dynamic_fixture',
 
     'core',
     'applications',
     'jobs',
+    'credits',
     'patreonmanager.apps.PatreonManagerConfig',
 )
 
