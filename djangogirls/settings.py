@@ -257,3 +257,6 @@ if 'OPBEAT_SECRET_TOKEN' in os.environ:
     ) + MIDDLEWARE_CLASSES
 
 CODEMIRROR_PATH = "vendor/codemirror/"
+
+GITHUB_USERNAME = 'djangogirlsapi'
+GITHUB_PASSWORD = 'ister123'

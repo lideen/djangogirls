@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django_gravatar.helpers import get_gravatar_url, has_gravatar
@@ -6,6 +7,7 @@ from easy_thumbnails.files import get_thumbnailer
 
 from core.models import Coach, Sponsor
 from credits.constants import DEFAULT_CREDIT_RECEIVER_PHOTO, CREDIT_CATEGORY_CHOICES
+from . import github
 
 
 @python_2_unicode_compatible
@@ -16,6 +18,7 @@ class Contributor(models.Model):
     show_email_in_public = models.BooleanField(default=False)
     link = models.CharField(max_length=1024, null=True, blank=True,
                             help_text="Link to the person (twitter or something else)")
+    github_login = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -36,6 +39,22 @@ class Contributor(models.Model):
             except InvalidImageFormatError:
                 return DEFAULT_CREDIT_RECEIVER_PHOTO
         return DEFAULT_CREDIT_RECEIVER_PHOTO
+
+    @classmethod
+    def import_from_github(cls, repo=None):
+        contributors = github.get_contributors(repo=repo)
+        for contributor in contributors:
+            try:
+                cls.objects.get(github_login=contributor.login)
+                # Ignore already imported users
+            except ObjectDoesNotExist:
+                contributor = cls.objects.create(
+                    name=contributor.name or contributor.login,
+                    email=contributor.email,
+                    github_login=contributor.login,
+                    link=contributor.html_url
+                )
+                contributor.save()
 
 
 @python_2_unicode_compatible
